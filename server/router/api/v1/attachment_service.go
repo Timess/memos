@@ -594,7 +594,7 @@ func (s *APIV1Service) getOrGenerateThumbnail(attachment *store.Attachment) ([]b
 
 var fileKeyPattern = regexp.MustCompile(`\{[a-z]{1,9}\}`)
 
-func replaceFilenameWithPathTemplate(path, create *store.Attachment, filename string) string {
+func replaceFilenameWithPathTemplate(path string, create *store.Attachment, filename string) string {
 	t := time.Now()
 	path = fileKeyPattern.ReplaceAllStringFunc(path, func(s string) string {
 		switch s {
