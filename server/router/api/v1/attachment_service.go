@@ -404,7 +404,7 @@ func SaveAttachmentBlob(ctx context.Context, profile *profile.Profile, stores *s
 		if !strings.Contains(internalPath, "{filename}") {
 			internalPath = filepath.Join(internalPath, "{filename}")
 		}
-		internalPath = replaceFilenameWithPathTemplate(internalPath, create.Filename)
+		internalPath = replaceFilenameWithPathTemplate(internalPath, create, create.Filename)
 		internalPath = filepath.ToSlash(internalPath)
 
 		// Ensure the directory exists.
@@ -443,7 +443,7 @@ func SaveAttachmentBlob(ctx context.Context, profile *profile.Profile, stores *s
 		if !strings.Contains(filepathTemplate, "{filename}") {
 			filepathTemplate = filepath.Join(filepathTemplate, "{filename}")
 		}
-		filepathTemplate = replaceFilenameWithPathTemplate(filepathTemplate, create.Filename)
+		filepathTemplate = replaceFilenameWithPathTemplate(filepathTemplate, create, create.Filename)
 		key, err := s3Client.UploadObject(ctx, filepathTemplate, create.Type, bytes.NewReader(create.Blob))
 		if err != nil {
 			return errors.Wrap(err, "Failed to upload via s3 client")
@@ -594,7 +594,7 @@ func (s *APIV1Service) getOrGenerateThumbnail(attachment *store.Attachment) ([]b
 
 var fileKeyPattern = regexp.MustCompile(`\{[a-z]{1,9}\}`)
 
-func replaceFilenameWithPathTemplate(path, filename string) string {
+func replaceFilenameWithPathTemplate(path, create *store.Attachment, filename string) string {
 	t := time.Now()
 	path = fileKeyPattern.ReplaceAllStringFunc(path, func(s string) string {
 		switch s {
@@ -616,6 +616,8 @@ func replaceFilenameWithPathTemplate(path, filename string) string {
 			return fmt.Sprintf("%02d", t.Second())
 		case "{uuid}":
 			return util.GenUUID()
+		case "{suid}":
+			return create.UID
 		default:
 			return s
 		}
