@@ -29,8 +29,8 @@ const RootLayout = observer(() => {
       } else if (
         ([Routes.ROOT, Routes.ATTACHMENTS, Routes.INBOX, Routes.ARCHIVED, Routes.SETTING] as string[]).includes(location.pathname)
       ) {
-        window.location.href = Routes.EXPLORE;
-        return;
+        //window.location.href = Routes.EXPLORE;
+        //return;
       }
     }
     setInitialized(true);
