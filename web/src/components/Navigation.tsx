@@ -44,7 +44,7 @@ const Navigation = observer((props: Props) => {
   };
   const exploreNavLink: NavLinkItem = {
     id: "header-explore",
-    path: Routes.EXPLORE,
+      path: '/u/ori164276',
     title: t("common.explore"),
     icon: <EarthIcon className="w-6 h-auto shrink-0" />,
   };

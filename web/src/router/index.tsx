@@ -103,14 +103,6 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: Routes.EXPLORE,
-            element: (
-              <Suspense fallback={<Loading />}>
-                <Explore />
-              </Suspense>
-            ),
-          },
-          {
             path: Routes.ATTACHMENTS,
             element: (
               <Suspense fallback={<Loading />}>
