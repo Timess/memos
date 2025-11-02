@@ -25,17 +25,17 @@ export const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 const validateTheme = (theme: string): ValidTheme => {
-  return VALID_THEMES.includes(theme as ValidTheme) ? (theme as ValidTheme) : "default";
+    return VALID_THEMES.includes(theme as ValidTheme) ? (theme as ValidTheme) : "whitewall";
 };
 
 /**
  * Detects system theme preference
  */
-export const getSystemTheme = (): "default" | "default-dark" => {
+export const getSystemTheme = (): "whitewall" | "default-dark" => {
   if (typeof window !== "undefined" && window.matchMedia) {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "default-dark" : "default";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "default-dark" : "whitewall";
   }
-  return "default";
+    return "whitewall";
 };
 
 /**
@@ -72,7 +72,7 @@ export const loadTheme = (themeName: string): void => {
   document.getElementById("workspace-theme")?.remove();
 
   // Apply theme (skip for default)
-  if (validTheme !== "default") {
+    if (validTheme !== "whitewall") {
     const css = THEME_CONTENT[validTheme];
     if (css) {
       const style = document.createElement("style");
