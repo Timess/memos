@@ -40,7 +40,7 @@ const MemoAttachmentListView = ({ attachments = [] }: { attachments: Attachment[
     if (type === "image/*") {
       return (
         <img
-          className={cn("cursor-pointer h-full w-auto rounded-lg border border-border/60 object-contain transition-colors", className)}
+          className={cn("cursor-pointer h-full w-auto rounded-lg object-contain transition-colors", className)}
           src={attachmentThumbnailUrl}
           onError={(e) => {
           }}
@@ -53,7 +53,7 @@ const MemoAttachmentListView = ({ attachments = [] }: { attachments: Attachment[
       return (
         <video
           className={cn(
-            "cursor-pointer h-full w-auto rounded-lg border border-border/60 object-contain bg-muted transition-colors",
+            "cursor-pointer h-full w-auto rounded-lg object-contain bg-muted transition-colors",
             className,
           )}
           preload="metadata"
