@@ -72,7 +72,7 @@ export const loadTheme = (themeName: string): void => {
   document.getElementById("workspace-theme")?.remove();
 
   // Apply theme (skip for default)
-    if (validTheme !== "whitewall") {
+    if (validTheme !== "default") {
     const css = THEME_CONTENT[validTheme];
     if (css) {
       const style = document.createElement("style");
