@@ -9,7 +9,7 @@ export const getAttachmentUrl = (attachment: Attachment) => {
 };
 
 export const getAttachmentThumbnailUrl = (attachment: Attachment) => {
-  return `${window.location.origin}/file/${attachment.name}/${attachment.filename}?thumbnail=true`;
+    return `${window.location.origin}/file/${attachment.name}/${attachment.filename}`;
 };
 
 export const getAttachmentType = (attachment: Attachment) => {

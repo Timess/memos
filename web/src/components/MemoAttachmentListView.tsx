@@ -43,12 +43,6 @@ const MemoAttachmentListView = ({ attachments = [] }: { attachments: Attachment[
           className={cn("cursor-pointer h-full w-auto rounded-lg border border-border/60 object-contain transition-colors", className)}
           src={attachmentThumbnailUrl}
           onError={(e) => {
-            // Fallback to original image if thumbnail fails
-            const target = e.target as HTMLImageElement;
-            if (target.src.includes("?thumbnail=true")) {
-              console.warn("Thumbnail failed, falling back to original image:", attachmentUrl);
-              target.src = attachmentUrl;
-            }
           }}
           onClick={() => handleImageClick(attachmentUrl)}
           decoding="async"
