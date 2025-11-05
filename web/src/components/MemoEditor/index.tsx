@@ -471,7 +471,8 @@ const MemoEditor = observer((props: Props) => {
             relationList,
           }));
         },
-        memoName,
+              memoName,
+              externalLinkList: [],
       }}
     >
       <div
