@@ -472,7 +472,6 @@ const MemoEditor = observer((props: Props) => {
           }));
         },
               memoName,
-              externalLinkList: [],
       }}
     >
       <div

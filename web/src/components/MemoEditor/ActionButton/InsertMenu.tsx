@@ -82,7 +82,7 @@ const InsertMenu = observer((props: Props) => {
   const handleExternalLinkConfirm = () => {
       const newLink = externalLink.state.placeholder;
       if (newLink.trim().length !== 0) {
-          context.externalLinkList = uniqBy([...context.externalLinkList, newLink]);
+          
       setExternalLinkDialogOpen(false);
     }
   };

@@ -8,7 +8,6 @@ interface Context {
   setAttachmentList: (attachmentList: Attachment[]) => void;
   setRelationList: (relationList: MemoRelation[]) => void;
   memoName?: string;
-  externalLinkList: string[];
 }
 
 export const MemoEditorContext = createContext<Context>({
@@ -16,5 +15,4 @@ export const MemoEditorContext = createContext<Context>({
   relationList: [],
   setAttachmentList: () => {},
   setRelationList: () => {},
-  externalLinkList: [],
 });
