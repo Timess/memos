@@ -1,6 +1,6 @@
 ﻿import { LatLng } from "leaflet";
 import { uniqBy } from "lodash-es";
-import { LinkIcon, LoaderIcon, MapPinIcon, PaperclipIcon, PlusIcon } from "lucide-react";
+import { LinkIcon, LoaderIcon, MapPinIcon, PaperclipIcon, PlusIcon, ExternalLinkIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,8 @@ const InsertMenu = observer((props: Props) => {
   const handleExternalLinkConfirm = () => {
       const newLink = externalLink.state.placeholder;
       if (newLink.trim().length !== 0) {
-          
+
+          externalLink.reset();
       setExternalLinkDialogOpen(false);
     }
   };
@@ -122,9 +123,9 @@ const InsertMenu = observer((props: Props) => {
           <DropdownMenuItem onClick={handleUploadClick}>
             <PaperclipIcon className="w-4 h-4" />
             {t("common.upload")}
-                  </DropdownMenuItem>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setExternalLinkDialogOpen(true)}>
-            <LinkIcon className="w-4 h-4" />
+            <ExternalLinkIcon className="w-4 h-4" />
            外部链接
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setLinkDialogOpen(true)}>
