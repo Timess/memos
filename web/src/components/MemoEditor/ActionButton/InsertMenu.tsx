@@ -1,4 +1,4 @@
-import { LatLng } from "leaflet";
+ï»¿import { LatLng } from "leaflet";
 import { uniqBy } from "lodash-es";
 import { LinkIcon, LoaderIcon, MapPinIcon, PaperclipIcon, PlusIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
@@ -125,7 +125,7 @@ const InsertMenu = observer((props: Props) => {
                   </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setExternalLinkDialogOpen(true)}>
             <LinkIcon className="w-4 h-4" />
-           Íâ²¿Á´½Ó
+           å¤–éƒ¨é“¾æŽ¥
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setLinkDialogOpen(true)}>
             <LinkIcon className="w-4 h-4" />
