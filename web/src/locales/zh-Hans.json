@@ -144,7 +144,7 @@
     "copy-content": "复制内容",
     "copy-link": "复制链接",
     "count-memos-in-date": "{{date}} 有 {{count}} 条备忘录",
-    "delete-confirm": "您确定要删除此条备忘录吗？（此操作不可逆）",
+    "delete-confirm": "您确定要删除此条备忘录吗？",
     "delete-confirm-description": "此操作不可撤销。附件、链接和引用也会被一并删除。",
     "direction": "排序方式",
     "direction-asc": "正序",
@@ -157,7 +157,7 @@
     "no-memos": "无备忘录",
     "order-by": "排序",
     "remove-completed-task-list-items": "移除已办",
-    "remove-completed-task-list-items-confirm": "您确定要移除所有完成的待办吗？（此操作不可逆）",
+    "remove-completed-task-list-items-confirm": "您确定要移除所有完成的待办吗？",
     "search-placeholder": "搜索备忘录",
     "show-less": "显示较少",
     "show-more": "查看更多",
@@ -435,5 +435,13 @@
     "rename-success": "重命名成功",
     "rename-tag": "重命名",
     "rename-tip": "您的所有带有此标签的备忘录将被更新。"
+  },
+  "tooltip": {
+    "link-memo": "链接Memo",
+    "markdown-menu": "Markdown",
+    "select-location": "位置",
+    "select-visibility": "可见",
+    "tags": "Tags",
+    "upload-attachment": "上传文件"
   }
 }

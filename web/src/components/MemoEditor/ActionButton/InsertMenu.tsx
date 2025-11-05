@@ -11,9 +11,11 @@ import { useTranslate } from "@/utils/i18n";
 import { MemoEditorContext } from "../types";
 import { LinkMemoDialog } from "./InsertMenu/LinkMemoDialog";
 import { LocationDialog } from "./InsertMenu/LocationDialog";
+import { ExternalLinkDialog } from "./InsertMenu/ExternalLinkDialog";
 import { useFileUpload } from "./InsertMenu/useFileUpload";
 import { useLinkMemo } from "./InsertMenu/useLinkMemo";
 import { useLocation } from "./InsertMenu/useLocation";
+import { useExternalLink } from "./InsertMenu/useExternalLink";
 
 interface Props {
   isUploading?: boolean;
@@ -27,6 +29,7 @@ const InsertMenu = observer((props: Props) => {
 
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
+  const [externalLinkDialogOpen, setExternalLinkDialogOpen] = useState(false);
 
   const { fileInputRef, uploadingFlag, handleFileInputChange, handleUploadClick } = useFileUpload((attachments: Attachment[]) => {
     context.setAttachmentList([...context.attachmentList, ...attachments]);
@@ -42,7 +45,8 @@ const InsertMenu = observer((props: Props) => {
     },
   });
 
-  const location = useLocation(props.location);
+    const location = useLocation(props.location);
+    const externalLink = useExternalLink();
 
   const isUploading = uploadingFlag || props.isUploading;
 
@@ -73,6 +77,19 @@ const InsertMenu = observer((props: Props) => {
   const handleLocationCancel = () => {
     location.reset();
     setLocationDialogOpen(false);
+  };
+
+  const handleExternalLinkConfirm = () => {
+      const newLink = externalLink.state.placeholder;
+      if (newLink.trim().length !== 0) {
+          context.externalLinkList = uniqBy([...context.externalLinkList, newLink]);
+      setExternalLinkDialogOpen(false);
+    }
+  };
+
+    const handleExternalLinkCancel = () => {
+    externalLink.reset();
+    setExternalLinkDialogOpen(false);
   };
 
   const handlePositionChange = (position: LatLng) => {
@@ -150,6 +167,15 @@ const InsertMenu = observer((props: Props) => {
         onPlaceholderChange={location.setPlaceholder}
         onCancel={handleLocationCancel}
         onConfirm={handleLocationConfirm}
+          />
+
+      <ExternalLinkDialog
+        open={externalLinkDialogOpen}
+        onOpenChange={setExternalLinkDialogOpen}
+        state={externalLink.state}
+        onPlaceholderChange={externalLink.setPlaceholder}
+        onCancel={handleExternalLinkCancel}
+        onConfirm={handleExternalLinkConfirm}
       />
     </>
   );

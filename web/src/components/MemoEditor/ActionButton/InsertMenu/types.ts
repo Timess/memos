@@ -13,3 +13,7 @@ export interface LinkMemoState {
   isFetching: boolean;
   fetchedMemos: Memo[];
 }
+
+export interface ExternalLinkState {
+    placeholder: string;
+}
