@@ -122,6 +122,10 @@ const InsertMenu = observer((props: Props) => {
           <DropdownMenuItem onClick={handleUploadClick}>
             <PaperclipIcon className="w-4 h-4" />
             {t("common.upload")}
+                  </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setExternalLinkDialogOpen(true)}>
+            <LinkIcon className="w-4 h-4" />
+           Õ‚≤ø¡¥Ω”
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setLinkDialogOpen(true)}>
             <LinkIcon className="w-4 h-4" />
