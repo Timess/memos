@@ -1,10 +1,6 @@
 ﻿import { LatLng } from "leaflet";
 import { uniqBy } from "lodash-es";
-<<<<<<< HEAD
-import { LinkIcon, LoaderIcon, MapPinIcon, PaperclipIcon, PlusIcon, ExternalLinkIcon } from "lucide-react";
-=======
-import { FileIcon, LinkIcon, LoaderIcon, MapPinIcon, PlusIcon } from "lucide-react";
->>>>>>> main
+import { FileIcon, LinkIcon, LoaderIcon, MapPinIcon, PaperclipIcon, PlusIcon, ExternalLinkIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";

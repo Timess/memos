@@ -1,13 +1,7 @@
-import defaultDarkThemeContent from "../themes/default-dark.css?raw";
+﻿import defaultDarkThemeContent from "../themes/default-dark.css?raw";
 import paperThemeContent from "../themes/paper.css?raw";
 import whitewallThemeContent from "../themes/whitewall.css?raw";
 
-<<<<<<< HEAD
-const VALID_THEMES = ["whitewall"] as const;
-type ValidTheme = (typeof VALID_THEMES)[number];
-
-const THEME_CONTENT: Record<ValidTheme, string | null> = {
-=======
 const VALID_THEMES = ["system", "default", "default-dark", "paper", "whitewall"] as const;
 type ValidTheme = (typeof VALID_THEMES)[number];
 
@@ -16,7 +10,6 @@ const THEME_CONTENT: Record<ValidTheme, string | null> = {
   default: null,
   "default-dark": defaultDarkThemeContent,
   paper: paperThemeContent,
->>>>>>> main
   whitewall: whitewallThemeContent,
 };
 
@@ -26,25 +19,25 @@ export interface ThemeOption {
 }
 
 export const THEME_OPTIONS: ThemeOption[] = [
-<<<<<<< HEAD
-=======
   { value: "system", label: "Sync with system" },
   { value: "default", label: "Light" },
   { value: "default-dark", label: "Dark" },
   { value: "paper", label: "Paper" },
->>>>>>> main
   { value: "whitewall", label: "Whitewall" },
 ];
 
 const validateTheme = (theme: string): ValidTheme => {
-    return "whitewall"
+  return VALID_THEMES.includes(theme as ValidTheme) ? (theme as ValidTheme) : "default";
 };
 
 /**
  * Detects system theme preference
  */
-export const getSystemTheme = (): "whitewall" => {
-    return "whitewall";
+export const getSystemTheme = (): "default" | "default-dark" => {
+  if (typeof window !== "undefined" && window.matchMedia) {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "default-dark" : "default";
+  }
+  return "default";
 };
 
 /**
@@ -64,9 +57,6 @@ export const resolveTheme = (theme: string): "default" | "default-dark" | "paper
  * Priority: stored user preference -> system preference -> default
  */
 export const getInitialTheme = (): ValidTheme => {
-<<<<<<< HEAD
-  return getSystemTheme();
-=======
   // Try to get stored theme from localStorage (where user settings might be cached)
   try {
     const storedTheme = localStorage.getItem("memos-theme");
@@ -79,7 +69,6 @@ export const getInitialTheme = (): ValidTheme => {
 
   // Fall back to system preference (return "system" to enable auto-switching)
   return "system";
->>>>>>> main
 };
 
 /**
@@ -100,15 +89,6 @@ export const loadTheme = (themeName: string): void => {
   document.getElementById("instance-theme")?.remove();
 
   // Apply theme (skip for default)
-<<<<<<< HEAD
-
-  const css = THEME_CONTENT[validTheme];
-  if (css) {
-    const style = document.createElement("style");
-    style.id = "instance-theme";
-    style.textContent = css;
-    document.head.appendChild(style);
-=======
   if (resolvedTheme !== "default") {
     const css = THEME_CONTENT[resolvedTheme];
     if (css) {
@@ -117,7 +97,6 @@ export const loadTheme = (themeName: string): void => {
       style.textContent = css;
       document.head.appendChild(style);
     }
->>>>>>> main
   }
 
   // Set data attribute with resolved theme
