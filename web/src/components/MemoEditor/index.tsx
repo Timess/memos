@@ -1,6 +1,6 @@
 import copy from "copy-to-clipboard";
 import { isEqual } from "lodash-es";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, Minimize2Icon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -13,19 +13,47 @@ import { isValidUrl } from "@/helpers/utils";
 import useAsyncEffect from "@/hooks/useAsyncEffect";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { cn } from "@/lib/utils";
-import { memoStore, attachmentStore, userStore, instanceStore } from "@/store";
+import { attachmentStore, instanceStore, memoStore, userStore } from "@/store";
 import { extractMemoIdFromName } from "@/store/common";
 import { Attachment } from "@/types/proto/api/v1/attachment_service";
 import { Location, Memo, MemoRelation, MemoRelation_Type, Visibility } from "@/types/proto/api/v1/memo_service";
 import { useTranslate } from "@/utils/i18n";
 import { convertVisibilityFromString } from "@/utils/memo";
 import DateTimeInput from "../DateTimeInput";
-import { LocationDisplay, AttachmentList, RelationList } from "../memo-metadata";
+import { AttachmentList, LocationDisplay, RelationList } from "../memo-metadata";
 import InsertMenu from "./ActionButton/InsertMenu";
 import VisibilitySelector from "./ActionButton/VisibilitySelector";
 import Editor, { EditorRefActions } from "./Editor";
 import { handleEditorKeydownWithMarkdownShortcuts, hyperlinkHighlightedText } from "./handlers";
 import { MemoEditorContext } from "./types";
+
+/**
+ * Focus Mode keyboard shortcuts
+ * - Toggle: Cmd/Ctrl + Shift + F (matches GitHub, Google Docs convention)
+ * - Exit: Escape key
+ */
+const FOCUS_MODE_TOGGLE_KEY = "f";
+const FOCUS_MODE_EXIT_KEY = "Escape";
+
+/**
+ * Focus Mode styling constants
+ * Centralized to make it easy to adjust the appearance and maintain consistency
+ */
+const FOCUS_MODE_STYLES = {
+  backdrop: "fixed inset-0 bg-black/20 backdrop-blur-sm z-40",
+  container: {
+    base: "fixed z-50 w-auto max-w-5xl mx-auto shadow-2xl border-border h-auto overflow-y-auto",
+    /**
+     * Responsive spacing using explicit positioning to avoid width conflicts:
+     * - Mobile (< 640px): 8px margin (0.5rem)
+     * - Tablet (640-768px): 16px margin (1rem)
+     * - Desktop (> 768px): 32px margin (2rem)
+     */
+    spacing: "top-2 left-2 right-2 bottom-2 sm:top-4 sm:left-4 sm:right-4 sm:bottom-4 md:top-8 md:left-8 md:right-8 md:bottom-8",
+  },
+  transition: "transition-all duration-300 ease-in-out",
+  exitButton: "absolute top-2 right-2 z-10 opacity-60 hover:opacity-100",
+} as const;
 
 export interface Props {
   className?: string;
@@ -49,6 +77,8 @@ interface State {
   isRequesting: boolean;
   isComposing: boolean;
   isDraggingFile: boolean;
+  /** Whether Focus Mode (distraction-free writing) is enabled */
+  isFocusMode: boolean;
 }
 
 const MemoEditor = observer((props: Props) => {
@@ -58,6 +88,7 @@ const MemoEditor = observer((props: Props) => {
   const currentUser = useCurrentUser();
   const [state, setState] = useState<State>({
     memoVisibility: Visibility.PRIVATE,
+    isFocusMode: false,
     attachmentList: [],
     relationList: [],
     location: undefined,
@@ -149,8 +180,29 @@ const MemoEditor = observer((props: Props) => {
     }
 
     const isMetaKey = event.ctrlKey || event.metaKey;
+
+    // Focus Mode toggle: Cmd/Ctrl + Shift + F
+    if (isMetaKey && event.shiftKey && event.key.toLowerCase() === FOCUS_MODE_TOGGLE_KEY) {
+      event.preventDefault();
+      toggleFocusMode();
+      return;
+    }
+
+    // Exit Focus Mode: Escape
+    if (event.key === FOCUS_MODE_EXIT_KEY && state.isFocusMode) {
+      event.preventDefault();
+      toggleFocusMode();
+      return;
+    }
+
     if (isMetaKey) {
       if (event.key === "Enter") {
+        event.preventDefault();
+        handleSaveBtnClick();
+        return;
+      }
+      if (event.key.toLowerCase() === "s") {
+        event.preventDefault();
         handleSaveBtnClick();
         return;
       }
@@ -169,6 +221,21 @@ const MemoEditor = observer((props: Props) => {
       }
       return;
     }
+  };
+
+  /**
+   * Toggle Focus Mode on/off
+   * Focus Mode provides a distraction-free writing experience with:
+   * - Expanded editor taking ~80-90% of viewport
+   * - Semi-transparent backdrop
+   * - Centered layout with optimal width
+   * - All editor functionality preserved
+   */
+  const toggleFocusMode = () => {
+    setState((prevState) => ({
+      ...prevState,
+      isFocusMode: !prevState.isFocusMode,
+    }));
   };
 
   const handleMemoVisibilityChange = (visibility: Visibility) => {
@@ -446,8 +513,9 @@ const MemoEditor = observer((props: Props) => {
       placeholder: props.placeholder ?? t("editor.any-thoughts"),
       onContentChange: handleContentChange,
       onPaste: handlePasteEvent,
+      isFocusMode: state.isFocusMode,
     }),
-    [i18n.language],
+    [i18n.language, state.isFocusMode],
   );
 
   const allowSave = (hasContent || state.attachmentList.length > 0) && !state.isUploadingAttachment && !state.isRequesting;
@@ -472,10 +540,15 @@ const MemoEditor = observer((props: Props) => {
               memoName,
       }}
     >
+      {/* Focus Mode Backdrop */}
+      {state.isFocusMode && <div className={FOCUS_MODE_STYLES.backdrop} onClick={toggleFocusMode} />}
+
       <div
         className={cn(
           "group relative w-full flex flex-col justify-start items-start bg-card px-4 pt-3 pb-2 rounded-lg border",
+          FOCUS_MODE_STYLES.transition,
           state.isDraggingFile ? "border-dashed border-muted-foreground cursor-copy" : "border-border cursor-auto",
+          state.isFocusMode && cn(FOCUS_MODE_STYLES.container.base, FOCUS_MODE_STYLES.container.spacing),
           className,
         )}
         tabIndex={0}
@@ -487,6 +560,19 @@ const MemoEditor = observer((props: Props) => {
         onCompositionStart={handleCompositionStart}
         onCompositionEnd={handleCompositionEnd}
       >
+        {/* Focus Mode Exit Button */}
+        {state.isFocusMode && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className={FOCUS_MODE_STYLES.exitButton}
+            onClick={toggleFocusMode}
+            title={t("editor.exit-focus-mode")}
+          >
+            <Minimize2Icon className="w-4 h-4" />
+          </Button>
+        )}
+
         <Editor ref={editorRef} {...editorConfig} />
         <LocationDisplay
           mode="edit"
@@ -511,6 +597,7 @@ const MemoEditor = observer((props: Props) => {
                   location,
                 }))
               }
+              onToggleFocusMode={toggleFocusMode}
             />
           </div>
           <div className="shrink-0 flex flex-row justify-end items-center">

@@ -102,7 +102,8 @@
     "username": "Username",
     "version": "Version",
     "visibility": "Visibility",
-    "yourself": "Yourself"
+    "yourself": "Yourself",
+    "more": "More"
   },
   "days": {
     "fri": "Fri",
@@ -117,7 +118,9 @@
     "add-your-comment-here": "Add your comment here...",
     "any-thoughts": "Any thoughts...",
     "save": "Save",
-    "no-changes-detected": "No changes detected"
+    "no-changes-detected": "No changes detected",
+    "focus-mode": "Focus Mode",
+    "exit-focus-mode": "Exit Focus Mode"
   },
   "filters": {
     "has-code": "hasCode",
